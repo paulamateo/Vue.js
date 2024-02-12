@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
 import HelloWorld from './components/HelloWorld.vue'
-import { reactive } from 'vue';
+import { computed, reactive } from 'vue';
 
 interface Post {
   id: number,
@@ -21,11 +21,16 @@ function getData() {
     }) 
 }
 
+const totalPostLessThan150 = computed( () => {
+  return posts.filter(p => p.body.length < 150).length
+})
+
 getData()
 
 </script>
 
 <template>
+  <div>Tengo {{ totalPostLessThan150 }} posts</div>
   <table>
     <thead>
       <tr>
@@ -37,14 +42,14 @@ getData()
       </tr>
     </thead>
     <tbody>
-      <tr v-for="post in posts"> 
-        <template v-if="post.body.length < 150">
-          <td>{{ post.id }}</td>
+      <tr v-for="post, index in posts" :class="{ par: index % 2 === 0, impar: index % 2 !== 0}"> 
+        <!-- <template v-if="post.body.length < 150"> -->
+          <td>{{ index }}</td>
           <td>{{ post.userId }}</td>
           <td>{{ post.title }}</td>
           <td>{{ post.body }}</td>
           <td>{{ post.body.length }}</td>
-        </template>
+        <!-- </template> -->
       </tr>
     </tbody>
   </table>
@@ -58,5 +63,14 @@ getData()
 
   thead tr {
     background-color: rgb(226, 226, 226);
+  }
+
+  .par {
+    background-color: blue;
+    color: white;
+  }
+
+  .impar {
+    background-color: grey;
   }
 </style>
